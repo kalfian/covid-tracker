@@ -1,5 +1,6 @@
 package com.ppb2.kalfian.covidtracker.modules.auth
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -14,5 +15,10 @@ class LoginActivity : AppCompatActivity() {
         b.progressBar.visibility = View.INVISIBLE
         val v = b.root
         setContentView(v)
+
+        b.registerBtn.setOnClickListener {
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
+        }
     }
 }

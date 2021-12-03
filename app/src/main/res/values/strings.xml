@@ -7,4 +7,14 @@
     <string name="not_have_account">Belum punya akun ?</string>
     <string name="register_now">Daftar Sekarang</string>
     <string name="login">Masuk</string>
+    <string name="register">Daftar</string>
+    <string name="name">Nama</string>
+    <string name="gender">Jenis kelamin</string>
+    <string name="male">Pria</string>
+    <string name="female">Wanita</string>
+    <string name="phone">No. Telepon</string>
+    <string name="id_number">Nomor Telepon</string>
+    <string name="address">Alamat</string>
+    <string name="nik">NIK</string>
+    <string name="register_page">Daftar</string>
 </resources>
