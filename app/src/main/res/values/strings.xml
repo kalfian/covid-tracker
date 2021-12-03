@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Covid Tracker</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="lupa_kata_sandi">Lupa Password?</string>
+    <string name="login_text">Masuk</string>
+    <string name="not_have_account">Belum punya akun ?</string>
+    <string name="register_now">Daftar Sekarang</string>
+    <string name="login">Masuk</string>
 </resources>
