@@ -3,6 +3,8 @@
     package="com.ppb2.kalfian.covidtracker">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-feature android:name="android.hardware.sensor.accelerometer"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -11,7 +13,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CovidTracker">
-        <activity android:name=".modules.auth.RegisterActivity"></activity>
+
+        <service
+            android:name=".utils.fallservice.FallService"
+            android:enabled="true" />
+
+        <activity android:name=".modules.dashboard.DashboardActivity"></activity>
+        <activity android:name=".modules.auth.RegisterActivity" />
         <activity android:name=".modules.auth.LoginActivity" />
         <activity
             android:name=".SplashScreen"
