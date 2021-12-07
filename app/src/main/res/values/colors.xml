@@ -12,4 +12,5 @@
     <color name="dark_blue">#19274B</color>
     <color name="text_primary">#647297</color>
     <color name="text_light">#DCE0EC</color>
+    <color name="red">#F63636</color>
 </resources>

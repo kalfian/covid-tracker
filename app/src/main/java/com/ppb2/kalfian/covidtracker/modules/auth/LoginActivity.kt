@@ -38,9 +38,23 @@ class LoginActivity : AppCompatActivity() {
         setContentView(v)
 
         b.loginBtn.setOnClickListener {
-            b.progressBar.visibility = View.VISIBLE
+
+            showLoader()
+
             email = b.emailEdit.text.toString()
             password = b.passwordEdit.text.toString()
+
+            if(email == "" || password == "") {
+                MotionToast.createColorToast(this,"Login Gagal!",
+                    "Email / Password Tidak boleh kosong !",
+                    MotionToastStyle.ERROR,
+                    MotionToast.GRAVITY_BOTTOM,
+                    MotionToast.LONG_DURATION,
+                    ResourcesCompat.getFont(this, R.font.helvetica_regular)
+                )
+                hideLoader()
+                return@setOnClickListener
+            }
 
             signIn(email, password) {
                 if (it == null) {
@@ -51,18 +65,19 @@ class LoginActivity : AppCompatActivity() {
                         MotionToast.LONG_DURATION,
                         ResourcesCompat.getFont(this, R.font.helvetica_regular)
                     )
-                } else {
-                    val intent = Intent(this, DashboardActivity::class.java)
-                    MotionToast.createColorToast(this,"Login Berhasil!",
-                        "Selamat Datang ${it?.email} !",
-                        MotionToastStyle.SUCCESS,
-                        MotionToast.GRAVITY_BOTTOM,
-                        MotionToast.LONG_DURATION,
-                        ResourcesCompat.getFont(this, R.font.helvetica_regular)
-                    )
-                    startActivity(intent)
-                    finish()
+                    return@signIn
                 }
+
+                val intent = Intent(this, DashboardActivity::class.java)
+                MotionToast.createColorToast(this,"Login Berhasil!",
+                    "Selamat Datang ${it?.email} !",
+                    MotionToastStyle.SUCCESS,
+                    MotionToast.GRAVITY_BOTTOM,
+                    MotionToast.LONG_DURATION,
+                    ResourcesCompat.getFont(this, R.font.helvetica_regular)
+                )
+                startActivity(intent)
+                finish()
 
             }
         }
@@ -73,9 +88,18 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    private fun hideLoader() {
+        b.progressBar.visibility = View.INVISIBLE
+    }
+
+    private fun showLoader() {
+        b.progressBar.visibility = View.VISIBLE
+    }
+
     private fun signIn(email: String, password: String, callback: (user: User?) -> Unit) {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
+                hideLoader()
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d("FIREBASE", "signInWithEmail:success")
@@ -85,13 +109,15 @@ class LoginActivity : AppCompatActivity() {
 
                     // TODO: Add logic to get user profile
                     db.child("Users").child(uid).get().addOnSuccessListener {
-                        val user = it.getValue(User::class.java)
-                        callback(user)
+                        val userLogin = it.getValue(User::class.java)
+                        callback(userLogin)
+                    }.addOnFailureListener {
+                        callback(null)
                     }
-
-                } else {
-                    callback(null)
+                    return@addOnCompleteListener
                 }
+
+                callback(null)
             }
     }
 }

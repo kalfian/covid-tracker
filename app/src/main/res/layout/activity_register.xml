@@ -67,17 +67,24 @@
                 android:textSize="18sp" />
 
             <EditText
-                android:id="@+id/idcard_edit"
+                android:id="@+id/nik_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
                 android:background="@drawable/round_border_blue"
                 android:drawableStart="@drawable/ic_baseline_card_membership_24"
                 android:drawablePadding="16dp"
                 android:ems="10"
                 android:hint="@string/nik"
-                android:inputType="text"
+                android:inputType="number"
                 android:padding="16dp" />
+            <TextView
+                android:id="@+id/nik_validate_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_marginBottom="8dp"
+                android:textColor="@color/red"
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/name_text"
@@ -92,7 +99,6 @@
                 android:id="@+id/name_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
                 android:background="@drawable/round_border_blue"
                 android:drawableStart="@drawable/ic_outline_person_24"
                 android:drawablePadding="16dp"
@@ -100,7 +106,14 @@
                 android:hint="@string/name"
                 android:inputType="text"
                 android:padding="16dp" />
-
+            <TextView
+                android:id="@+id/name_validate_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_marginBottom="8dp"
+                android:textColor="@color/red"
+                android:textSize="12sp" />
             <TextView
                 android:id="@+id/gender_rd"
                 android:layout_width="match_parent"
@@ -110,26 +123,29 @@
                 android:textColor="@color/blue"
                 android:textSize="18sp" />
 
-            <LinearLayout
+            <RadioGroup
+                android:id="@+id/gender_group"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="15dp"
                 android:orientation="horizontal">
 
                 <RadioButton
-                    android:id="@+id/maleRd"
+                    android:id="@+id/male_radio"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+
                     android:layout_weight="1"
+                    android:checked="true"
                     android:text="@string/male" />
 
                 <RadioButton
-                    android:id="@+id/femaleRd"
+                    android:id="@+id/female_radio"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/female" />
-            </LinearLayout>
+            </RadioGroup>
 
             <TextView
                 android:id="@+id/phone_text"
@@ -144,36 +160,20 @@
                 android:id="@+id/phone_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
                 android:background="@drawable/round_border_blue"
                 android:drawableStart="@drawable/ic_outline_smartphone_24"
                 android:drawablePadding="16dp"
                 android:ems="10"
                 android:hint="@string/phone"
-                android:inputType="number"
                 android:padding="16dp" />
-
             <TextView
-                android:id="@+id/ktp_text"
+                android:id="@+id/phone_validate_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp"
-                android:text="@string/id_number"
-                android:textColor="@color/blue"
-                android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/ktp_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/round_border_blue"
-                android:drawableStart="@drawable/ic_outline_perm_contact_calendar_24"
-                android:drawablePadding="16dp"
-                android:ems="10"
-                android:hint="@string/id_number"
-                android:inputType="number"
-                android:padding="16dp" />
+                android:text=""
+                android:layout_marginBottom="8dp"
+                android:textColor="@color/red"
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/address_text"
@@ -188,7 +188,6 @@
                 android:id="@+id/address_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
                 android:background="@drawable/round_border_blue"
                 android:drawableStart="@drawable/ic_outline_home_24"
                 android:drawablePadding="16dp"
@@ -196,6 +195,14 @@
                 android:hint="@string/address"
                 android:inputType="text"
                 android:padding="16dp" />
+            <TextView
+                android:id="@+id/address_validate_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_marginBottom="8dp"
+                android:textColor="@color/red"
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/email_text"
@@ -210,7 +217,6 @@
                 android:id="@+id/email_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
                 android:background="@drawable/round_border_blue"
                 android:drawableStart="@drawable/ic_baseline_mail_outline_24"
                 android:drawablePadding="16dp"
@@ -218,6 +224,14 @@
                 android:hint="@string/email"
                 android:inputType="textEmailAddress"
                 android:padding="16dp" />
+            <TextView
+                android:id="@+id/email_validate_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_marginBottom="8dp"
+                android:textColor="@color/red"
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/password_text"
@@ -232,7 +246,6 @@
                 android:id="@+id/password_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
                 android:background="@drawable/round_border_blue"
                 android:drawableStart="@drawable/ic_outline_lock_24"
                 android:drawablePadding="16dp"
@@ -240,7 +253,45 @@
                 android:hint="@string/password"
                 android:inputType="textPassword"
                 android:padding="16dp" />
+            <TextView
+                android:id="@+id/password_validate_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_marginBottom="8dp"
+                android:textColor="@color/red"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/password_confirmation_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:text="@string/password_confirmation"
+                android:textColor="@color/blue"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/password_confirmation_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_border_blue"
+                android:drawableStart="@drawable/ic_outline_lock_24"
+                android:drawablePadding="16dp"
+                android:ems="10"
+                android:hint="@string/password_confirmation"
+                android:inputType="textPassword"
+                android:padding="16dp" />
+            <TextView
+                android:id="@+id/password_confirmation_validate_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_marginBottom="8dp"
+                android:textColor="@color/red"
+                android:textSize="12sp" />
             <Button
+                android:layout_marginTop="12dp"
                 android:id="@+id/submit_btn"
                 android:padding="14dp"
                 android:background="@drawable/round_background_blue"
