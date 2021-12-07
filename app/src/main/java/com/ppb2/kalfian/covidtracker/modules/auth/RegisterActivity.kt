@@ -2,16 +2,23 @@ package com.ppb2.kalfian.covidtracker.modules.auth
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.ppb2.kalfian.covidtracker.R
 import com.ppb2.kalfian.covidtracker.databinding.ActivityRegisterBinding
+import com.ppb2.kalfian.covidtracker.models.User
 import www.sanju.motiontoast.MotionToast
 import www.sanju.motiontoast.MotionToastStyle
 
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var b: ActivityRegisterBinding
+    private lateinit var db: DatabaseReference
+    private lateinit var auth: FirebaseAuth
 
     private var email = "";
     private var password = "";
@@ -20,10 +27,15 @@ class RegisterActivity : AppCompatActivity() {
     private var phone_number = "";
     private var jk = 0;
 
+    public var isSuccess = true;
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         b = ActivityRegisterBinding.inflate(layoutInflater)
         b.progressBar.visibility = View.INVISIBLE
+
+        db = FirebaseDatabase.getInstance().reference
+        auth = FirebaseAuth.getInstance()
 
         val v = b.root
         setContentView(v)
@@ -39,9 +51,58 @@ class RegisterActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-
+            var user = getUserData()
+            if (!insertUser(user)) {
+                MotionToast.createColorToast(this,"Register Gagal!",
+                    "Terjadi kesalahan saat melakukan registrasi",
+                    MotionToastStyle.ERROR,
+                    MotionToast.GRAVITY_BOTTOM,
+                    MotionToast.LONG_DURATION,
+                    ResourcesCompat.getFont(this, R.font.helvetica_regular)
+                )
+                return@setOnClickListener
+            }
 
         }
+    }
+
+    private fun insertUser(user: User): Boolean {
+        // Register Email & Password
+        auth.createUserWithEmailAndPassword(user.email, user.password).addOnSuccessListener {
+            Log.d("DEBUG_DB", it.toString())
+
+            user.uid = it.user?.uid ?: "KOSONG"
+            if (user.uid == "") {
+                this.isSuccess = false
+                Log.d("DEBUG_DB", "UID KOSONG")
+                return@addOnSuccessListener
+            }
+
+
+            // Index Email
+            db.child("ListedEmail").push().setValue(user.email)
+
+            // Index Phone Number
+            db.child("ListedPhoneNumber").push().setValue(user.phoneNumber)
+
+            // Index NIK
+            db.child("ListedNik").push().setValue(user.nik)
+
+            // Insert User
+            db.child("Users").child(user.uid).setValue(user)
+
+        }.addOnFailureListener {
+            Log.d("DEBUG_DB", it.message.toString())
+            this.isSuccess = false
+            Log.d("DEBUG_DB_STATUS", isSuccess.toString())
+        }
+
+        if (!this.isSuccess) {
+            Log.d("DEBUG_DB", "RETURN FALSE")
+            return false
+        }
+
+        return this.isSuccess
     }
 
     private fun isValidated(): Boolean {
@@ -78,15 +139,41 @@ class RegisterActivity : AppCompatActivity() {
             isValidated = false
         }
 
+        if (b.passwordEdit.text.toString().length < 6) {
+            b.passwordValidateText.text = "password minimal 6 digit"
+            isValidated = false
+        }
+
         if (b.passwordConfirmationEdit.text.toString() == "") {
             b.passwordConfirmationValidateText.text = "Silahkan isi Konfirmasi Password terlebih dahulu"
             isValidated = false
         }
 
+        if (b.passwordEdit.text.toString() != b.passwordConfirmationEdit.text.toString()) {
+            b.passwordConfirmationValidateText.text = "Password tidak sama"
+            isValidated = false
+        }
+
         return isValidated
+    }
 
+    private fun getUserData(): User {
+        var user = User()
 
+        user.nik = b.nikEdit.text.toString()
+        user.name = b.nameEdit.text.toString()
+        user.phoneNumber = b.phoneEdit.text.toString()
 
+        var gender = 0
+        if (b.femaleRadio.isSelected) {
+            gender = 1
+        }
+
+        user.gender = gender
+        user.email = b.emailEdit.text.toString()
+        user.password = b.passwordEdit.text.toString()
+
+        return user
     }
 
     private fun resetValidation() {

@@ -1,13 +1,17 @@
 package com.ppb2.kalfian.covidtracker.models
 
+import java.io.Serializable
+
 data class User (
-    val nik: String = "",
-    val email: String = "",
-    val name: String = "",
-    val phoneNumber: String = "",
-    val gender: Int = 0,
-    val pin: String = ""
-) {
+    var uid: String = "",
+    var nik: String = "",
+    var email: String = "",
+    var name: String = "",
+    var phoneNumber: String = "",
+    var gender: Int = 0,
+    var pin: String = "",
+    var password: String = ""
+): Serializable {
     fun toMap() {
         nik to nik
         email to email

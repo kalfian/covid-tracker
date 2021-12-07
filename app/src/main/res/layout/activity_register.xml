@@ -164,7 +164,9 @@
                 android:drawableStart="@drawable/ic_outline_smartphone_24"
                 android:drawablePadding="16dp"
                 android:ems="10"
+                android:maxLines="1"
                 android:hint="@string/phone"
+                android:inputType="number"
                 android:padding="16dp" />
             <TextView
                 android:id="@+id/phone_validate_text"
