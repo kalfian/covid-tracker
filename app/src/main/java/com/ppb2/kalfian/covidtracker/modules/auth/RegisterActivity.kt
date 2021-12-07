@@ -6,8 +6,7 @@ import android.util.Log
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.ppb2.kalfian.covidtracker.R
 import com.ppb2.kalfian.covidtracker.databinding.ActivityRegisterBinding
 import com.ppb2.kalfian.covidtracker.models.User
@@ -20,14 +19,11 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var db: DatabaseReference
     private lateinit var auth: FirebaseAuth
 
-    private var email = "";
-    private var password = "";
-    private var password_confirmation = "";
-    private var nik = "";
-    private var phone_number = "";
-    private var jk = 0;
+    private var mails: MutableList<String> = ArrayList()
+    private var phone: MutableList<String> = ArrayList()
+    private var nik: MutableList<String> = ArrayList()
 
-    public var isSuccess = true;
+    var isSuccess = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +32,9 @@ class RegisterActivity : AppCompatActivity() {
 
         db = FirebaseDatabase.getInstance().reference
         auth = FirebaseAuth.getInstance()
+        listenEmail()
+        listenPhone()
+        listenNik()
 
         val v = b.root
         setContentView(v)
@@ -67,8 +66,10 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun insertUser(user: User): Boolean {
-        // Register Email & Password
+
         auth.createUserWithEmailAndPassword(user.email, user.password).addOnSuccessListener {
+            this.isSuccess = true
+
             Log.d("DEBUG_DB", it.toString())
 
             user.uid = it.user?.uid ?: "KOSONG"
@@ -154,6 +155,21 @@ class RegisterActivity : AppCompatActivity() {
             isValidated = false
         }
 
+        if (!uniqueEmail(b.emailEdit.text.toString())) {
+            b.emailValidateText.text = "Email Telah digunakan, coba gunakan email lain"
+            isValidated = false
+        }
+
+        if (!uniqueEmail(b.phoneEdit.text.toString())) {
+            b.emailValidateText.text = "Nomor telepon Telah digunakan, coba gunakan nomor telepon lain"
+            isValidated = false
+        }
+
+        if (!uniqueEmail(b.nikEdit.text.toString())) {
+            b.emailValidateText.text = "NIK Telah digunakan, coba gunakan NIK lain"
+            isValidated = false
+        }
+
         return isValidated
     }
 
@@ -174,6 +190,152 @@ class RegisterActivity : AppCompatActivity() {
         user.password = b.passwordEdit.text.toString()
 
         return user
+    }
+
+    private fun uniqueEmail(email: String): Boolean {
+        if (mails.contains(email)) {
+            return false
+        }
+        return true
+    }
+
+    private fun uniquePhone(phoneInput: String): Boolean {
+        if (phone.contains(phoneInput)) {
+            return false
+        }
+        return true
+    }
+
+    private fun uniqueNik(nikInput: String): Boolean {
+        if (nik.contains(nikInput)) {
+            return false
+        }
+        return true
+    }
+
+    private fun listenEmail() {
+        val proc = db.child("ListedEmail")
+
+        proc.addChildEventListener(object: ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                mails.add(snapshot.value.toString())
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+
+        proc.addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                mails.clear()
+                snapshot.children.forEach {
+                    mails.add(it.value.toString())
+                }
+
+                Log.d("DEBUG_DB", mails.toString())
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+    }
+    private fun listenPhone() {
+        val proc = db.child("ListedPhoneNumber")
+
+        proc.addChildEventListener(object: ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                phone.add(snapshot.value.toString())
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+
+        proc.addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                phone.clear()
+                snapshot.children.forEach {
+                    phone.add(it.value.toString())
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+    }
+    private fun listenNik() {
+        val proc = db.child("ListedNik")
+
+        proc.addChildEventListener(object: ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                nik.add(snapshot.value.toString())
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+
+        proc.addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                nik.clear()
+                snapshot.children.forEach {
+                    nik.add(it.value.toString())
+                }
+
+                Log.d("DEBUG_DB", mails.toString())
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
     }
 
     private fun resetValidation() {
