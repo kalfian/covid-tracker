@@ -7,9 +7,12 @@ import android.util.Log
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.ktx.Firebase
 import com.ppb2.kalfian.covidtracker.R
 import com.ppb2.kalfian.covidtracker.databinding.ActivityLoginBinding
+import com.ppb2.kalfian.covidtracker.models.User
 import com.ppb2.kalfian.covidtracker.modules.dashboard.DashboardActivity
 import www.sanju.motiontoast.MotionToast
 import www.sanju.motiontoast.MotionToastStyle
@@ -17,6 +20,7 @@ import www.sanju.motiontoast.MotionToastStyle
 class LoginActivity : AppCompatActivity() {
     private lateinit var b: ActivityLoginBinding
     private lateinit var auth: FirebaseAuth
+    private lateinit var db: DatabaseReference
 
     private var email = "";
     private var password = "";
@@ -26,6 +30,8 @@ class LoginActivity : AppCompatActivity() {
         b = ActivityLoginBinding.inflate(layoutInflater)
         b.progressBar.visibility = View.INVISIBLE
         auth = FirebaseAuth.getInstance()
+        db = FirebaseDatabase.getInstance().reference
+
         val v = b.root
 
 
@@ -37,26 +43,27 @@ class LoginActivity : AppCompatActivity() {
             password = b.passwordEdit.text.toString()
 
             signIn(email, password) {
-                it.let {
-                    val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
-                    MotionToast.createColorToast(this@LoginActivity,"Login Berhasil!",
-                        "Selamat Datang ${it?.displayName} !",
-                        MotionToastStyle.SUCCESS,
-                        MotionToast.GRAVITY_BOTTOM,
-                        MotionToast.LONG_DURATION,
-                        ResourcesCompat.getFont(this@LoginActivity, R.font.helvetica_regular)
-                    )
-                    startActivity(intent)
-                    finish()
-                } ?: run {
-                    MotionToast.createColorToast(this@LoginActivity,"Login Gagal!",
+                if (it == null) {
+                    MotionToast.createColorToast(this,"Login Gagal!",
                         "Kredensial Salah !",
                         MotionToastStyle.ERROR,
                         MotionToast.GRAVITY_BOTTOM,
                         MotionToast.LONG_DURATION,
-                        ResourcesCompat.getFont(this@LoginActivity, R.font.helvetica_regular)
+                        ResourcesCompat.getFont(this, R.font.helvetica_regular)
                     )
+                } else {
+                    val intent = Intent(this, DashboardActivity::class.java)
+                    MotionToast.createColorToast(this,"Login Berhasil!",
+                        "Selamat Datang ${it?.email} !",
+                        MotionToastStyle.SUCCESS,
+                        MotionToast.GRAVITY_BOTTOM,
+                        MotionToast.LONG_DURATION,
+                        ResourcesCompat.getFont(this, R.font.helvetica_regular)
+                    )
+                    startActivity(intent)
+                    finish()
                 }
+
             }
         }
 
@@ -66,14 +73,22 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun signIn(email: String, password: String, callback: (user: FirebaseUser?) -> Unit) {
+    private fun signIn(email: String, password: String, callback: (user: User?) -> Unit) {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d("FIREBASE", "signInWithEmail:success")
                     val user = auth.currentUser
-                    callback(user)
+                    val uid = if (user?.uid != null) user.uid else ""
+
+
+                    // TODO: Add logic to get user profile
+                    db.child("Users").child(uid).get().addOnSuccessListener {
+                        val user = it.getValue(User::class.java)
+                        callback(user)
+                    }
+
                 } else {
                     callback(null)
                 }
