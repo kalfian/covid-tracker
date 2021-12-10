@@ -34,7 +34,6 @@ class LoginActivity : AppCompatActivity() {
 
         val v = b.root
 
-
         setContentView(v)
 
         b.loginBtn.setOnClickListener {
@@ -76,8 +75,8 @@ class LoginActivity : AppCompatActivity() {
                     MotionToast.LONG_DURATION,
                     ResourcesCompat.getFont(this, R.font.helvetica_regular)
                 )
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
-                finish()
 
             }
         }

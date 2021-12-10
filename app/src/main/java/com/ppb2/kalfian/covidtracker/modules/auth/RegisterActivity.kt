@@ -1,15 +1,18 @@
 package com.ppb2.kalfian.covidtracker.modules.auth
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.ppb2.kalfian.covidtracker.R
 import com.ppb2.kalfian.covidtracker.databinding.ActivityRegisterBinding
 import com.ppb2.kalfian.covidtracker.models.User
+import com.ppb2.kalfian.covidtracker.modules.dashboard.DashboardActivity
 import www.sanju.motiontoast.MotionToast
 import www.sanju.motiontoast.MotionToastStyle
 
@@ -23,8 +26,6 @@ class RegisterActivity : AppCompatActivity() {
     private var phone: MutableList<String> = ArrayList()
     private var nik: MutableList<String> = ArrayList()
 
-    var isSuccess = true
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         b = ActivityRegisterBinding.inflate(layoutInflater)
@@ -32,6 +33,7 @@ class RegisterActivity : AppCompatActivity() {
 
         db = FirebaseDatabase.getInstance().reference
         auth = FirebaseAuth.getInstance()
+
         listenEmail()
         listenPhone()
         listenNik()
@@ -50,35 +52,39 @@ class RegisterActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            var user = getUserData()
-            if (!insertUser(user)) {
-                MotionToast.createColorToast(this,"Register Gagal!",
-                    "Terjadi kesalahan saat melakukan registrasi",
-                    MotionToastStyle.ERROR,
-                    MotionToast.GRAVITY_BOTTOM,
-                    MotionToast.LONG_DURATION,
-                    ResourcesCompat.getFont(this, R.font.helvetica_regular)
-                )
-                return@setOnClickListener
+            val user = getUserData()
+            insertUser(user) {
+                if (!it) {
+                    MotionToast.createColorToast(this,"Register Gagal!",
+                        "Terjadi kesalahan saat melakukan registrasi",
+                        MotionToastStyle.ERROR,
+                        MotionToast.GRAVITY_BOTTOM,
+                        MotionToast.LONG_DURATION,
+                        ResourcesCompat.getFont(this, R.font.helvetica_regular)
+                    )
+                    return@insertUser
+                }
+
+                val intent = Intent(this, DashboardActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
             }
 
         }
     }
 
-    private fun insertUser(user: User): Boolean {
+    private fun insertUser(user: User, callback: (isSuccess: Boolean) -> Unit) {
 
         auth.createUserWithEmailAndPassword(user.email, user.password).addOnSuccessListener {
-            this.isSuccess = true
-
-            Log.d("DEBUG_DB", it.toString())
 
             user.uid = it.user?.uid ?: "KOSONG"
             if (user.uid == "") {
-                this.isSuccess = false
-                Log.d("DEBUG_DB", "UID KOSONG")
+                callback(false)
                 return@addOnSuccessListener
             }
 
+            // Insert User
+            db.child("Users").child(user.uid).setValue(user)
 
             // Index Email
             db.child("ListedEmail").push().setValue(user.email)
@@ -89,21 +95,15 @@ class RegisterActivity : AppCompatActivity() {
             // Index NIK
             db.child("ListedNik").push().setValue(user.nik)
 
-            // Insert User
-            db.child("Users").child(user.uid).setValue(user)
+
+
+            callback(true)
+            return@addOnSuccessListener
 
         }.addOnFailureListener {
-            Log.d("DEBUG_DB", it.message.toString())
-            this.isSuccess = false
-            Log.d("DEBUG_DB_STATUS", isSuccess.toString())
+            callback(false)
+            return@addOnFailureListener
         }
-
-        if (!this.isSuccess) {
-            Log.d("DEBUG_DB", "RETURN FALSE")
-            return false
-        }
-
-        return this.isSuccess
     }
 
     private fun isValidated(): Boolean {
@@ -160,13 +160,13 @@ class RegisterActivity : AppCompatActivity() {
             isValidated = false
         }
 
-        if (!uniqueEmail(b.phoneEdit.text.toString())) {
-            b.emailValidateText.text = "Nomor telepon Telah digunakan, coba gunakan nomor telepon lain"
+        if (!uniquePhone(b.phoneEdit.text.toString())) {
+            b.phoneValidateText.text = "Nomor telepon Telah digunakan, coba gunakan nomor telepon lain"
             isValidated = false
         }
 
-        if (!uniqueEmail(b.nikEdit.text.toString())) {
-            b.emailValidateText.text = "NIK Telah digunakan, coba gunakan NIK lain"
+        if (!uniqueNik(b.nikEdit.text.toString())) {
+            b.nikValidateText.text = "NIK Telah digunakan, coba gunakan NIK lain"
             isValidated = false
         }
 
