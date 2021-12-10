@@ -1,18 +1,18 @@
 package com.ppb2.kalfian.covidtracker.modules.dashboard
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.ppb2.kalfian.covidtracker.adapters.VaccineCertAdapter
 import com.ppb2.kalfian.covidtracker.databinding.ActivityDashboardBinding
+import com.ppb2.kalfian.covidtracker.models.User
 import com.ppb2.kalfian.covidtracker.models.VaccineCert
-import com.ppb2.kalfian.covidtracker.modules.auth.LoginActivity
-import com.ppb2.kalfian.covidtracker.utils.customModal
+import com.ppb2.kalfian.covidtracker.utils.isAuthorize
+
 
 class DashboardActivity : AppCompatActivity(), VaccineCertAdapter.AdapterVaccineCertOnClickListener {
 
@@ -39,32 +39,16 @@ class DashboardActivity : AppCompatActivity(), VaccineCertAdapter.AdapterVaccine
         val v = b.root
         setContentView(v)
 
-        if (auth.currentUser == null) {
-            customModal(applicationContext,
-                "Apakah anda yakin ingin keluar?",
-                "tekan tombol keluar untuk kembali ke halaman login", "Keluar", "Batal", true
-            ) {
-                val intent = Intent(applicationContext, LoginActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                startActivity(intent)
-            }
-            return
-        }
+        isAuthorize(auth)
 
         this.userUID = auth.currentUser!!.uid
 
         listenVaccineCert()
+        listenUser()
         dummyList()
 
         b.swipeRefreshHome.setOnRefreshListener {
-//            if (this.isShowed) {
-//                b.test.visibility = View.GONE
-//            } else {
-//                b.test.visibility = View.VISIBLE
-//            }
-//
-//            this.isShowed = !this.isShowed
-//
+            listenUser()
             b.swipeRefreshHome.isRefreshing = false
         }
     }
@@ -75,9 +59,24 @@ class DashboardActivity : AppCompatActivity(), VaccineCertAdapter.AdapterVaccine
         b.listVaccineCert.adapter = adapter
     }
 
+    private fun listenUser() {
+        val proc = db.child("Users").child(this.userUID)
+        proc.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val user = snapshot.getValue(User::class.java)
+                b.displayName.text = "Hi, ${user?.name}"
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(applicationContext, "Error when get data", Toast.LENGTH_SHORT).show()
+            }
+
+        })
+    }
+
     private fun listenVaccineCert() {
         b.listVaccineCert.visibility = View.GONE
-//        val proc = db.child("ListedEmail").child()
+
 
     }
 
@@ -90,6 +89,6 @@ class DashboardActivity : AppCompatActivity(), VaccineCertAdapter.AdapterVaccine
     }
 
     override fun onItemClickListener(data: VaccineCert) {
-
+        auth.signOut()
     }
 }

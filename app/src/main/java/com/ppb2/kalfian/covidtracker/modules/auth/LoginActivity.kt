@@ -69,7 +69,7 @@ class LoginActivity : AppCompatActivity() {
 
                 val intent = Intent(this, DashboardActivity::class.java)
                 MotionToast.createColorToast(this,"Login Berhasil!",
-                    "Selamat Datang ${it?.email} !",
+                    "Selamat Datang ${it?.name} !",
                     MotionToastStyle.SUCCESS,
                     MotionToast.GRAVITY_BOTTOM,
                     MotionToast.LONG_DURATION,
