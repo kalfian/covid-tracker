@@ -49,7 +49,7 @@ class LoginActivity : AppCompatActivity() {
                     MotionToastStyle.ERROR,
                     MotionToast.GRAVITY_BOTTOM,
                     MotionToast.LONG_DURATION,
-                    ResourcesCompat.getFont(this, R.font.helvetica_regular)
+                    ResourcesCompat.getFont(this, R.font.inter_regular)
                 )
                 hideLoader()
                 return@setOnClickListener
@@ -62,7 +62,7 @@ class LoginActivity : AppCompatActivity() {
                         MotionToastStyle.ERROR,
                         MotionToast.GRAVITY_BOTTOM,
                         MotionToast.LONG_DURATION,
-                        ResourcesCompat.getFont(this, R.font.helvetica_regular)
+                        ResourcesCompat.getFont(this, R.font.inter_regular)
                     )
                     return@signIn
                 }
@@ -73,7 +73,7 @@ class LoginActivity : AppCompatActivity() {
                     MotionToastStyle.SUCCESS,
                     MotionToast.GRAVITY_BOTTOM,
                     MotionToast.LONG_DURATION,
-                    ResourcesCompat.getFont(this, R.font.helvetica_regular)
+                    ResourcesCompat.getFont(this, R.font.inter_regular)
                 )
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)

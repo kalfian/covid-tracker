@@ -7,66 +7,105 @@
     android:background="@color/blue"
     tools:context=".modules.dashboard.DashboardActivity">
 
-    <androidx.core.widget.NestedScrollView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_home"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-        <LinearLayout
+
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:orientation="vertical"
             android:layout_height="wrap_content">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="24dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/profile_image"
-                    android:src="@drawable/user"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    app:civ_border_width="1dp"
-                    app:civ_border_color="@color/white"/>
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:fontFamily="@font/inter_bold"
-                    android:layout_weight="1"
-                    android:text="Hi, Kukuh Alfian Hanif" />
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-                <ImageButton
-                    android:id="@+id/imageButton"
-                    android:background="@drawable/more"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"/>
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:id="@+id/profile_image"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/user"
+                        app:riv_border_color="@color/white"
+                        app:riv_border_width="2dp"
+                        app:riv_corner_radius="150dp" />
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/inter_bold"
+                        android:text="Hi, Kukuh Alfian Hanif"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <ImageButton
+                        android:id="@+id/imageButton"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/more" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dimen_16"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginRight="@dimen/dimen_16"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/inter_bold"
+                        android:text="@string/sertifikat_vaksin"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:layout_marginBottom="8dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/empty_vaccine_cert"
+                        android:layout_width="match_parent"
+                        android:layout_height="180dp"
+                        android:layout_marginLeft="@dimen/dimen_16"
+                        android:layout_marginRight="@dimen/dimen_16"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/inter_bold"
+                        android:gravity="center"
+                        android:background="@drawable/round_boder_white"
+                        android:text="Sertifikat tidak ditemukan"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/list_vaccine_cert"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
             </LinearLayout>
-            <TextView
-                android:layout_marginLeft="@dimen/dimen_16"
-                android:layout_marginRight="@dimen/dimen_16"
-                android:layout_marginTop="24dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:fontFamily="@font/inter_bold"
-                android:layout_weight="1"
-                android:text="@string/sertifikat_vaksin" />
-        </LinearLayout>
-
-    </androidx.core.widget.NestedScrollView>
-
+        </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

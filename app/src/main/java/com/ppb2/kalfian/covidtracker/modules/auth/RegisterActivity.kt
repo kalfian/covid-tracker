@@ -60,7 +60,7 @@ class RegisterActivity : AppCompatActivity() {
                         MotionToastStyle.ERROR,
                         MotionToast.GRAVITY_BOTTOM,
                         MotionToast.LONG_DURATION,
-                        ResourcesCompat.getFont(this, R.font.helvetica_regular)
+                        ResourcesCompat.getFont(this, R.font.inter_regular)
                     )
                     return@insertUser
                 }
