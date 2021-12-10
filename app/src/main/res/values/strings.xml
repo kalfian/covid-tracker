@@ -18,4 +18,5 @@
     <string name="nik">NIK</string>
     <string name="register_page">Daftar</string>
     <string name="password_confirmation">Konfirmasi Password</string>
+    <string name="sertifikat_vaksin">Sertifikat Vaksin</string>
 </resources>
