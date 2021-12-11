@@ -1,6 +1,7 @@
 package com.ppb2.kalfian.covidtracker.modules.dashboard
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -61,14 +62,14 @@ class DashboardActivity : AppCompatActivity(), VaccineCertAdapter.AdapterVaccine
 
     private fun listenUser() {
         val proc = db.child("Users").child(this.userUID)
-        proc.addListenerForSingleValueEvent(object : ValueEventListener {
+        proc.addValueEventListener(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val user = snapshot.getValue(User::class.java)
                 b.displayName.text = "Hi, ${user?.name}"
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(applicationContext, "Error when get data", Toast.LENGTH_SHORT).show()
+
             }
 
         })

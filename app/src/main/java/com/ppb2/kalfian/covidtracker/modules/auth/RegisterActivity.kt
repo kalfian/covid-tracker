@@ -216,37 +216,15 @@ class RegisterActivity : AppCompatActivity() {
     private fun listenEmail() {
         val proc = db.child("ListedEmail")
 
-        proc.addChildEventListener(object: ChildEventListener {
-            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                mails.add(snapshot.value.toString())
-            }
-
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-
-            }
-
-            override fun onChildRemoved(snapshot: DataSnapshot) {
-
-            }
-
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-
-        })
-
         proc.addValueEventListener(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
+                Log.d("DB_CHANGED", "DATABASE CHANGED! VALUE LISTENER")
                 mails.clear()
                 snapshot.children.forEach {
                     mails.add(it.value.toString())
                 }
 
-                Log.d("DEBUG_DB", mails.toString())
+                Log.d("DB_CHANGED", mails.toString())
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -257,29 +235,6 @@ class RegisterActivity : AppCompatActivity() {
     }
     private fun listenPhone() {
         val proc = db.child("ListedPhoneNumber")
-
-        proc.addChildEventListener(object: ChildEventListener {
-            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                phone.add(snapshot.value.toString())
-            }
-
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-
-            }
-
-            override fun onChildRemoved(snapshot: DataSnapshot) {
-
-            }
-
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-
-        })
 
         proc.addValueEventListener(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -297,29 +252,6 @@ class RegisterActivity : AppCompatActivity() {
     }
     private fun listenNik() {
         val proc = db.child("ListedNik")
-
-        proc.addChildEventListener(object: ChildEventListener {
-            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                nik.add(snapshot.value.toString())
-            }
-
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-
-            }
-
-            override fun onChildRemoved(snapshot: DataSnapshot) {
-
-            }
-
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-
-        })
 
         proc.addValueEventListener(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
