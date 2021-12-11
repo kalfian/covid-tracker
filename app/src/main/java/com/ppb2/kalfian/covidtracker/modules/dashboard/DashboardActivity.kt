@@ -46,7 +46,6 @@ class DashboardActivity : AppCompatActivity(), VaccineCertAdapter.AdapterVaccine
 
         listenVaccineCert()
         listenUser()
-        dummyList()
 
         b.swipeRefreshHome.setOnRefreshListener {
             listenUser()
@@ -78,15 +77,35 @@ class DashboardActivity : AppCompatActivity(), VaccineCertAdapter.AdapterVaccine
     private fun listenVaccineCert() {
         b.listVaccineCert.visibility = View.GONE
 
+        val proc = db.child("VaccineCert").child(this.userUID).orderByChild("status").equalTo(true)
+        proc.addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val listVaccineCert = arrayListOf<VaccineCert>()
+                snapshot.children.forEach {
+                    val vaccine = it.getValue(VaccineCert::class.java)
+                    if (vaccine != null) {
+                        listVaccineCert.add(vaccine!!)
+                    }
+                }
+                if(listVaccineCert.size > 0 ){
+                    adapter.clear()
+                    adapter.addList(listVaccineCert)
+                    b.listVaccineCert.visibility = View.VISIBLE
+                    b.emptyVaccineCert.visibility = View.GONE
+                } else {
+                    b.listVaccineCert.visibility = View.GONE
+                    b.emptyVaccineCert.visibility = View.VISIBLE
+                }
+            }
 
-    }
+            override fun onCancelled(error: DatabaseError) {
+                b.listVaccineCert.visibility = View.GONE
+                b.emptyVaccineCert.visibility = View.VISIBLE
+                Toast.makeText(applicationContext, "Error when fetch Vaccine Certificate", Toast.LENGTH_LONG).show()
+            }
 
-    private fun dummyList() {
-        b.listVaccineCert.visibility = View.VISIBLE
-        b.emptyVaccineCert.visibility = View.GONE
+        })
 
-        adapter.add(VaccineCert("1", "Vaksin Pertama", "https://asset.kompas.com/crops/DUy-Sev8-DjV1byu_JzKBKct16Y=/177x72:1066x665/780x390/data/photo/2021/07/05/60e250f122139.jpg", "1", 1))
-        adapter.add(VaccineCert("1", "Vaksin Kedua", "https://asset.kompas.com/crops/DUy-Sev8-DjV1byu_JzKBKct16Y=/177x72:1066x665/780x390/data/photo/2021/07/05/60e250f122139.jpg", "1", 1))
     }
 
     override fun onItemClickListener(data: VaccineCert) {

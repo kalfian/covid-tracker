@@ -7,5 +7,6 @@ data class VaccineCert (
     var title: String = "",
     var image: String = "",
     var user_uid: String = "",
-    var seq: Int = 1
+    var seq: Int = 1,
+    var status: Boolean = false
 ): Serializable
