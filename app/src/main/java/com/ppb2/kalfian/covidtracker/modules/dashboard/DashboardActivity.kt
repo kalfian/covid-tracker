@@ -8,22 +8,32 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.database.ktx.getValue
+import com.ppb2.kalfian.covidtracker.adapters.TestCovidAdapter
 import com.ppb2.kalfian.covidtracker.adapters.VaccineCertAdapter
 import com.ppb2.kalfian.covidtracker.databinding.ActivityDashboardBinding
+import com.ppb2.kalfian.covidtracker.models.TestCovid
 import com.ppb2.kalfian.covidtracker.models.User
 import com.ppb2.kalfian.covidtracker.models.VaccineCert
 import com.ppb2.kalfian.covidtracker.utils.isAuthorize
+import java.security.Timestamp
+import java.time.Instant
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
 
-class DashboardActivity : AppCompatActivity(), VaccineCertAdapter.AdapterVaccineCertOnClickListener {
+class DashboardActivity : AppCompatActivity(), VaccineCertAdapter.AdapterVaccineCertOnClickListener, TestCovidAdapter.AdapterTestCovidOnClickListener {
 
     private lateinit var b: ActivityDashboardBinding
     private lateinit var auth: FirebaseAuth
     private lateinit var db: DatabaseReference
 
 
-    private lateinit var adapter: VaccineCertAdapter
-    private lateinit var layoutManager: LinearLayoutManager
+    private lateinit var vaccineAdapter: VaccineCertAdapter
+    private lateinit var vaccinelayoutManager: LinearLayoutManager
+
+    private lateinit var testCovidAdapter: TestCovidAdapter
+    private lateinit var testCovidlayoutManager: LinearLayoutManager
 
     private var userUID = ""
 
@@ -34,8 +44,8 @@ class DashboardActivity : AppCompatActivity(), VaccineCertAdapter.AdapterVaccine
         auth = FirebaseAuth.getInstance()
         db = FirebaseDatabase.getInstance().reference
 
-        layoutManager = LinearLayoutManager(applicationContext, LinearLayoutManager.HORIZONTAL, false)
         setupVaccineCert()
+        setupTestCovid()
 
         val v = b.root
         setContentView(v)
@@ -45,6 +55,7 @@ class DashboardActivity : AppCompatActivity(), VaccineCertAdapter.AdapterVaccine
         this.userUID = auth.currentUser!!.uid
 
         listenVaccineCert()
+        listenTestCovid()
         listenUser()
 
         b.swipeRefreshHome.setOnRefreshListener {
@@ -54,9 +65,17 @@ class DashboardActivity : AppCompatActivity(), VaccineCertAdapter.AdapterVaccine
     }
 
     private fun setupVaccineCert() {
-        b.listVaccineCert.layoutManager = layoutManager
-        adapter = VaccineCertAdapter(this)
-        b.listVaccineCert.adapter = adapter
+        vaccinelayoutManager = LinearLayoutManager(applicationContext, LinearLayoutManager.HORIZONTAL, false)
+        b.listVaccineCert.layoutManager = vaccinelayoutManager
+        vaccineAdapter = VaccineCertAdapter(this)
+        b.listVaccineCert.adapter = vaccineAdapter
+    }
+
+    private fun setupTestCovid() {
+        testCovidlayoutManager = LinearLayoutManager(applicationContext, LinearLayoutManager.HORIZONTAL, false)
+        b.listTestCovid.layoutManager = testCovidlayoutManager
+        testCovidAdapter = TestCovidAdapter(this)
+        b.listTestCovid.adapter = testCovidAdapter
     }
 
     private fun listenUser() {
@@ -88,8 +107,8 @@ class DashboardActivity : AppCompatActivity(), VaccineCertAdapter.AdapterVaccine
                     }
                 }
                 if(listVaccineCert.size > 0 ){
-                    adapter.clear()
-                    adapter.addList(listVaccineCert)
+                    vaccineAdapter.clear()
+                    vaccineAdapter.addList(listVaccineCert)
                     b.listVaccineCert.visibility = View.VISIBLE
                     b.emptyVaccineCert.visibility = View.GONE
                 } else {
@@ -108,7 +127,52 @@ class DashboardActivity : AppCompatActivity(), VaccineCertAdapter.AdapterVaccine
 
     }
 
+    private fun listenTestCovid() {
+        b.listTestCovid.visibility = View.GONE
+
+        val currentTimestamp =  System.currentTimeMillis() / 1000L
+        Log.d("TIMESTAMP", currentTimestamp.toString())
+
+        val proc = db.child("TestCovid").child(this.userUID).orderByChild("valid_date").startAt(currentTimestamp.toDouble())
+
+        proc.addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val listTestCovid = arrayListOf<TestCovid>()
+                snapshot.children.forEach {
+                    val tc = it.getValue(TestCovid::class.java)
+                    if (tc != null) {
+                        listTestCovid.add(tc!!)
+                    }
+                }
+
+                Log.d("TIMESTAMP", listTestCovid.toString())
+
+                if(listTestCovid.size > 0 ){
+                    testCovidAdapter.clear()
+                    testCovidAdapter.addList(listTestCovid)
+                    b.listTestCovid.visibility = View.VISIBLE
+                    b.emptyTestCovid.visibility = View.GONE
+                } else {
+                    b.listTestCovid.visibility = View.GONE
+                    b.emptyTestCovid.visibility = View.VISIBLE
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                b.listTestCovid.visibility = View.GONE
+                b.emptyTestCovid.visibility = View.VISIBLE
+                Toast.makeText(applicationContext, "Error when fetch Test Covid", Toast.LENGTH_LONG).show()
+            }
+
+        })
+
+    }
+
     override fun onItemClickListener(data: VaccineCert) {
         auth.signOut()
+    }
+
+    override fun onItemClickListener(data: TestCovid) {
+
     }
 }

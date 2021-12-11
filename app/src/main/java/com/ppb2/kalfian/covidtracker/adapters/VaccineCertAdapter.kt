@@ -24,7 +24,7 @@ class VaccineCertAdapter(onClick: AdapterVaccineCertOnClickListener): RecyclerVi
 
         fun bind(v: VaccineCert) {
             b.vaccineTitle.text = v.title
-            var image = v.image
+            val image = v.image
 
             Picasso.get()
                 .load(image)
