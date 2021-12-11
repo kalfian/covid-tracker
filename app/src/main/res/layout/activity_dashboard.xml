@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blue"
     tools:context=".modules.dashboard.DashboardActivity">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -16,136 +15,202 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <!-- Parent Layout -->
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
+            <!-- Parent Linear -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
+                <!-- Top Layout -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginRight="16dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <com.makeramen.roundedimageview.RoundedImageView
-                        android:id="@+id/profile_image"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@drawable/user"
-                        app:riv_border_color="@color/white"
-                        app:riv_border_width="2dp"
-                        app:riv_corner_radius="150dp" />
-
-                    <TextView
-                        android:id="@+id/display_name"
-                        android:layout_width="0dp"
+                    android:background="@color/blue"
+                    android:paddingBottom="24dp"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/inter_bold"
-                        android:text="-"
-                        android:textColor="@color/white"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginRight="16dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                    <ImageButton
-                        android:id="@+id/imageButton"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:background="@drawable/more" />
+                        <com.makeramen.roundedimageview.RoundedImageView
+                            android:id="@+id/profile_image"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@drawable/user"
+                            app:riv_border_color="@color/white"
+                            app:riv_border_width="2dp"
+                            app:riv_corner_radius="150dp" />
+
+                        <TextView
+                            android:id="@+id/display_name"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/inter_bold"
+                            android:text="-"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <ImageButton
+                            android:id="@+id/imageButton"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@drawable/more" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="vertical"
+                        android:layout_marginTop="24dp"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/dimen_16"
+                            android:layout_marginRight="@dimen/dimen_16"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/inter_bold"
+                            android:text="@string/sertifikat_vaksin"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"
+                            android:layout_marginBottom="8dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/empty_vaccine_cert"
+                            android:layout_width="match_parent"
+                            android:layout_height="140dp"
+                            android:layout_marginLeft="@dimen/dimen_16"
+                            android:layout_marginRight="@dimen/dimen_16"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/inter_bold"
+                            android:gravity="center"
+                            android:background="@drawable/round_background_white"
+                            android:text="Sertifikat tidak ditemukan"
+                            android:textColor="@color/blue"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/list_vaccine_cert"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="vertical"
+                        android:layout_marginTop="24dp"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/dimen_16"
+                            android:layout_marginRight="@dimen/dimen_16"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/inter_bold"
+                            android:text="Hasil Test Covid - 19"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"
+                            android:layout_marginBottom="8dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/empty_test_covid"
+                            android:layout_width="match_parent"
+                            android:layout_height="80dp"
+                            android:layout_marginLeft="@dimen/dimen_16"
+                            android:layout_marginRight="@dimen/dimen_16"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/inter_bold"
+                            android:gravity="center"
+                            android:background="@drawable/round_background_white"
+                            android:text="Tidak ada hasil test covid"
+                            android:textColor="@color/blue"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/list_test_covid"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                    </LinearLayout>
                 </LinearLayout>
+                <!-- Top Layout -->
 
-
+                <!-- Riwayat Layout -->
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:orientation="vertical"
-                    android:layout_marginTop="24dp"
                     android:layout_height="wrap_content">
-                    <TextView
+                    <LinearLayout
                         android:layout_width="match_parent"
+                        android:orientation="vertical"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/dimen_16"
-                        android:layout_marginRight="@dimen/dimen_16"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/inter_bold"
-                        android:text="@string/sertifikat_vaksin"
-                        android:textColor="@color/white"
-                        android:textSize="18sp"
-                        android:layout_marginBottom="8dp"
-                        android:textStyle="bold" />
+                        android:background="@drawable/round_top_border_white"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:gravity="center_vertical"
+                        android:paddingTop="24dp"
+                        android:paddingBottom="100dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/inter_bold"
+                                android:gravity="left"
+                                android:background="@drawable/round_background_white"
+                                android:text="Riwayat Check-in"
+                                android:textColor="@color/blue"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:layout_height="wrap_content"/>
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:layout_gravity="end"
+                                android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/empty_vaccine_cert"
-                        android:layout_width="match_parent"
-                        android:layout_height="140dp"
-                        android:layout_marginLeft="@dimen/dimen_16"
-                        android:layout_marginRight="@dimen/dimen_16"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/inter_bold"
-                        android:gravity="center"
-                        android:background="@drawable/round_background_white"
-                        android:text="Sertifikat tidak ditemukan"
-                        android:textColor="@color/blue"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/round_background_white"
+                                    android:drawableEnd="@drawable/ic_baseline_chevron_right_mini"
+                                    android:fontFamily="@font/inter_regular"
+                                    android:text="@string/riwayat_lengkap"
+                                    android:gravity="center_vertical"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/list_vaccine_cert"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:orientation="vertical"
-                    android:layout_marginTop="24dp"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/dimen_16"
-                        android:layout_marginRight="@dimen/dimen_16"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/inter_bold"
-                        android:text="Hasil Test Covid - 19"
-                        android:textColor="@color/white"
-                        android:textSize="18sp"
-                        android:layout_marginBottom="8dp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/empty_test_covid"
-                        android:layout_width="match_parent"
-                        android:layout_height="80dp"
-                        android:layout_marginLeft="@dimen/dimen_16"
-                        android:layout_marginRight="@dimen/dimen_16"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/inter_bold"
-                        android:gravity="center"
-                        android:background="@drawable/round_background_white"
-                        android:text="Tidak ada hasil test covid"
-                        android:textColor="@color/blue"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/list_test_covid"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-                </LinearLayout>
-
+                <!-- Riwayat Layout -->
             </LinearLayout>
+            <!-- Parent Linear -->
         </androidx.core.widget.NestedScrollView>
+        <!-- Parent Layout -->
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

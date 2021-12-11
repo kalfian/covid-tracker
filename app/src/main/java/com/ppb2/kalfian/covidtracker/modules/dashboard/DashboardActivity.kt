@@ -169,7 +169,7 @@ class DashboardActivity : AppCompatActivity(), VaccineCertAdapter.AdapterVaccine
     }
 
     override fun onItemClickListener(data: VaccineCert) {
-        auth.signOut()
+        
     }
 
     override fun onItemClickListener(data: TestCovid) {
