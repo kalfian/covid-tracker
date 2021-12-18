@@ -19,7 +19,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CovidTracker">
-        <activity android:name=".modules.history.CheckInHistoryActivity"></activity>
+        <activity android:name=".modules.setting.SettingActivity"></activity>
+        <activity android:name=".modules.history.CheckInHistoryActivity" />
 
         <service
             android:name=".utils.fallservice.FallService"
