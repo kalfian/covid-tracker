@@ -3,26 +3,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.ppb2.kalfian.covidtracker">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-feature android:name="android.hardware.sensor.accelerometer"
-        android:required="true" />
     <uses-sdk tools:overrideLibrary="com.google.zxing.client.android" />
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-feature
+        android:name="android.hardware.sensor.accelerometer"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:hardwareAccelerated="true"
         android:theme="@style/Theme.CovidTracker">
+        <activity android:name=".modules.history.CheckInHistoryActivity"></activity>
 
         <service
             android:name=".utils.fallservice.FallService"
             android:enabled="true" />
 
-        <activity android:name=".modules.dashboard.DashboardActivity"></activity>
+        <activity android:name=".modules.dashboard.DashboardActivity" />
         <activity android:name=".modules.auth.RegisterActivity" />
         <activity android:name=".modules.auth.LoginActivity" />
         <activity

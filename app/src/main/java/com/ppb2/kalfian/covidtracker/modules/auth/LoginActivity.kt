@@ -68,13 +68,6 @@ class LoginActivity : AppCompatActivity() {
                 }
 
                 val intent = Intent(this, DashboardActivity::class.java)
-                MotionToast.createColorToast(this,"Login Berhasil!",
-                    "Selamat Datang ${it?.name} !",
-                    MotionToastStyle.SUCCESS,
-                    MotionToast.GRAVITY_BOTTOM,
-                    MotionToast.LONG_DURATION,
-                    ResourcesCompat.getFont(this, R.font.inter_regular)
-                )
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
 
