@@ -16,6 +16,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <!-- Parent Layout -->
+
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -91,7 +92,7 @@
                         <TextView
                             android:id="@+id/empty_vaccine_cert"
                             android:layout_width="match_parent"
-                            android:layout_height="140dp"
+                            android:layout_height="160dp"
                             android:layout_marginLeft="@dimen/dimen_16"
                             android:layout_marginRight="@dimen/dimen_16"
                             android:layout_weight="1"
@@ -131,7 +132,7 @@
                         <TextView
                             android:id="@+id/empty_test_covid"
                             android:layout_width="match_parent"
-                            android:layout_height="80dp"
+                            android:layout_height="120dp"
                             android:layout_marginLeft="@dimen/dimen_16"
                             android:layout_marginRight="@dimen/dimen_16"
                             android:layout_weight="1"
@@ -155,6 +156,7 @@
                 <!-- Riwayat Layout -->
                 <LinearLayout
                     android:layout_width="match_parent"
+                    android:orientation="vertical"
                     android:layout_height="wrap_content">
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -164,8 +166,7 @@
                         android:paddingLeft="16dp"
                         android:paddingRight="16dp"
                         android:gravity="center_vertical"
-                        android:paddingTop="24dp"
-                        android:paddingBottom="100dp">
+                        android:paddingTop="24dp">
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -173,11 +174,11 @@
                             android:orientation="horizontal">
                             <TextView
                                 android:layout_width="wrap_content"
-                                android:layout_weight="1"
+                                android:layout_weight="2"
                                 android:fontFamily="@font/inter_bold"
-                                android:gravity="left"
+                                android:gravity="start"
                                 android:background="@drawable/round_background_white"
-                                android:text="Riwayat Check-in"
+                                android:text="@string/riwayat_check_in"
                                 android:textColor="@color/blue"
                                 android:textSize="18sp"
                                 android:textStyle="bold"
@@ -186,13 +187,14 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
+                                android:gravity="end"
                                 android:layout_gravity="end"
                                 android:orientation="horizontal">
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="1"
+
                                     android:background="@drawable/round_background_white"
                                     android:drawableEnd="@drawable/ic_baseline_chevron_right_mini"
                                     android:fontFamily="@font/inter_regular"
@@ -205,6 +207,10 @@
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/list_checkin_history"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
                 <!-- Riwayat Layout -->
             </LinearLayout>
@@ -212,5 +218,19 @@
         </androidx.core.widget.NestedScrollView>
         <!-- Parent Layout -->
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
+    <Button
+        android:id="@+id/scan_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
+        android:paddingStart="28dp"
+        android:paddingEnd="28dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/circle_blue"
+        android:text="Scan QR Code"
+        android:drawableStart="@drawable/ic_baseline_qr_code_scanner_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

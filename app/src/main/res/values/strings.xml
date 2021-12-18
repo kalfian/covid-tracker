@@ -20,4 +20,6 @@
     <string name="password_confirmation">Konfirmasi Password</string>
     <string name="sertifikat_vaksin">Sertifikat Vaksin</string>
     <string name="riwayat_lengkap">Riwayat lengkap</string>
+    <string name="riwayat_check_in">Riwayat Check-in</string>
+    <string name="keluar">Keluar</string>
 </resources>

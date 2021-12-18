@@ -1,14 +1,13 @@
 package com.ppb2.kalfian.covidtracker.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.ppb2.kalfian.covidtracker.R
 import com.ppb2.kalfian.covidtracker.databinding.ListTestCovidBinding
 import com.ppb2.kalfian.covidtracker.models.TestCovid
-import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -28,11 +27,18 @@ class TestCovidAdapter(onClick: AdapterTestCovidOnClickListener): RecyclerView.A
         fun bind(v: TestCovid) {
             b.titleTestCovid.text = v.title
 
+            if (v.positive) {
+                b.titleTestCovid.setTextColor(ContextCompat.getColor(itemView.context, R.color.red))
+            } else {
+                b.titleTestCovid.setTextColor(ContextCompat.getColor(itemView.context, R.color.green))
+            }
+
             val date = Date(v.valid_date.toLong() * 1000)
-            Log.d("TIMESTAMP ADAPTER", v.valid_date.toLong().toString())
             val simpleDateFormat = SimpleDateFormat("dd MMMM yyyy, HH:mm:ss", Locale.getDefault())
             val formattedDate = simpleDateFormat.format(date)
             b.validUntilTestCovid.text = "Berlaku hingga $formattedDate"
+
+            b.fromPlace.text = v.from
 
             itemView.setOnClickListener {
                 clickListener.onItemClickListener(list[adapterPosition])
