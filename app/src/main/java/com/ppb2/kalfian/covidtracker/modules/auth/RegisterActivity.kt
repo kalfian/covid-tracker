@@ -41,7 +41,8 @@ class RegisterActivity : AppCompatActivity() {
         val v = b.root
         setContentView(v)
 
-        b.backButton.setOnClickListener {
+        b.nav.titleNav.text = "Register"
+        b.nav.backButton.setOnClickListener {
             finish()
         }
 

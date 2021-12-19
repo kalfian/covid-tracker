@@ -1,12 +1,16 @@
 package com.ppb2.kalfian.covidtracker.modules.setting
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import com.example.awesomedialog.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.ppb2.kalfian.covidtracker.databinding.ActivityCheckInHistoryBinding
+import com.ppb2.kalfian.covidtracker.R
 import com.ppb2.kalfian.covidtracker.databinding.ActivitySettingBinding
+import com.ppb2.kalfian.covidtracker.modules.auth.LoginActivity
 import com.ppb2.kalfian.covidtracker.utils.isAuthorize
 
 class SettingActivity : AppCompatActivity() {
@@ -31,5 +35,29 @@ class SettingActivity : AppCompatActivity() {
         isAuthorize(auth)
 
         this.userUID = auth.currentUser!!.uid
+
+
+        b.nav.titleNav.text = "Pengaturan"
+        b.nav.backButton.setOnClickListener {
+            finish()
+        }
+
+        b.btnLogout.setOnClickListener {
+            AwesomeDialog.build(this)
+                .title("Sesi habis")
+                .body("Silahkan login kembali untuk memulai sesi baru")
+                .onPositive(
+                    "Ok",
+                    R.drawable.rounded_blue,
+                    ContextCompat.getColor(this, android.R.color.white)
+                ) {
+                    auth.signOut()
+                    val intent = Intent(applicationContext, LoginActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
+                }.onNegative("Batal", R.drawable.rounded_border_blue, ContextCompat.getColor(this, R.color.blue)) {
+
+                }
+        }
     }
 }

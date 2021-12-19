@@ -43,7 +43,8 @@ class CheckInHistoryActivity : AppCompatActivity(), CheckInHistoryAdapter.Adapte
 
         listenCheckIn()
 
-        b.backButton.setOnClickListener {
+        b.nav.titleNav.text = "Riwayat Lengkap"
+        b.nav.backButton.setOnClickListener {
             finish()
         }
 

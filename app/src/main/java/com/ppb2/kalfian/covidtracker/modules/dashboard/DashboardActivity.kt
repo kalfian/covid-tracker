@@ -19,6 +19,7 @@ import com.ppb2.kalfian.covidtracker.adapters.VaccineCertAdapter
 import com.ppb2.kalfian.covidtracker.databinding.ActivityDashboardBinding
 import com.ppb2.kalfian.covidtracker.models.*
 import com.ppb2.kalfian.covidtracker.modules.history.CheckInHistoryActivity
+import com.ppb2.kalfian.covidtracker.modules.setting.SettingActivity
 import com.ppb2.kalfian.covidtracker.utils.DB
 import com.ppb2.kalfian.covidtracker.utils.Validate
 import com.ppb2.kalfian.covidtracker.utils.fireDialog
@@ -76,6 +77,11 @@ class DashboardActivity : AppCompatActivity(), VaccineCertAdapter.AdapterVaccine
 
         b.btnRiwayatLengkap.setOnClickListener {
             val intent = Intent(this, CheckInHistoryActivity::class.java)
+            startActivity(intent)
+        }
+
+        b.btnOption.setOnClickListener{
+            val intent = Intent(this, SettingActivity::class.java)
             startActivity(intent)
         }
     }
