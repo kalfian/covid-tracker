@@ -239,7 +239,7 @@ class DashboardActivity : AppCompatActivity(), VaccineCertAdapter.AdapterVaccine
                     return@getPlaceById
                 }
 
-                val place = it!!
+                val place = it
 
                 if (place.need_vaccine == 1 && listVaccineCert.size < 1) {
                     this.fireDialog("Gagal Masuk", "Gagal Masuk di ${place.name}, karena belum vaksin minimal 1 kali")

@@ -116,7 +116,7 @@ class FallService: Service(), SensorEventListener {
             chan.lightColor = Color.BLUE
             chan.lockscreenVisibility = Notification.VISIBILITY_PRIVATE
             val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            manager.createNotificationChannel(chan);
+            manager.createNotificationChannel(chan)
 
             Notification.Builder(this, CHANNEL_ID)
                 .setContentTitle("Emergency Started")
