@@ -13,6 +13,7 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Build
 import android.os.IBinder
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.ppb2.kalfian.covidtracker.R
 import java.text.DecimalFormat
@@ -66,7 +67,7 @@ class FallService: Service(), SensorEventListener {
             sensorManager.registerListener(this, light, SensorManager.SENSOR_DELAY_NORMAL)
         }
 
-        return Service.START_STICKY
+        return START_NOT_STICKY
     }
 
     override fun onBind(intent: Intent?): IBinder?  = null
@@ -103,19 +104,14 @@ class FallService: Service(), SensorEventListener {
                 val fallObject = FallObject(timeStamp, duration)
 
                 onSensorChanged.onFall(fallObject)
-
-                showFallNotification(timeStamp, duration)
-
             }
         }
     }
 
 
     private fun startForeground(){
-
         val notification: Notification = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-            val channelName = "My Background Service"
+            val channelName = "Emergency Service"
             val chan = NotificationChannel(CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_DEFAULT)
             chan.lightColor = Color.BLUE
             chan.lockscreenVisibility = Notification.VISIBILITY_PRIVATE
@@ -123,8 +119,8 @@ class FallService: Service(), SensorEventListener {
             manager.createNotificationChannel(chan);
 
             Notification.Builder(this, CHANNEL_ID)
-                .setContentTitle("FallService")
-                .setContentText("Foreground service is running")
+                .setContentTitle("Emergency Started")
+                .setContentText("Emergency service berjalan, alarm akan berbunyi jika device terjatuh")
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .build()
         } else {
@@ -134,34 +130,11 @@ class FallService: Service(), SensorEventListener {
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .build()
         }
-
-        startForeground(1, notification)
-    }
-
-    fun showFallNotification(timeStamp: String, duration: String) {
-
-        val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-            val channelName = "My Background Service2"
-            val chan = NotificationChannel(CHANNEL_ID_NOTIFICATIONS, channelName, NotificationManager.IMPORTANCE_DEFAULT)
-            manager.createNotificationChannel(chan);
-
-            val builder = Notification.Builder(this, CHANNEL_ID_NOTIFICATIONS)
-                .setContentTitle("FallService")
-                .setContentText("Last fall $timeStamp with duration of $duration ms")
-                .setSmallIcon(R.drawable.ic_launcher_background)
-
-            manager.notify(ct++, builder.build())
-
-        }else{
-
-            val builder = NotificationCompat.Builder(this, CHANNEL_ID_NOTIFICATIONS)
-                .setContentTitle("FallService")
-                .setContentText("Last fall $timeStamp with duration of $duration ms")
-                .setSmallIcon(R.drawable.ic_launcher_background)
-
-            manager.notify(ct++, builder.build())
+        try {
+            startForeground(1, notification)
+        } catch(e: Exception) {
+            Log.d("ERROR_LOG", e.localizedMessage.toString())
         }
+
     }
 }

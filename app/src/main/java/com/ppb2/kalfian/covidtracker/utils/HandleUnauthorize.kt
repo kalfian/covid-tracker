@@ -11,7 +11,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.ppb2.kalfian.covidtracker.R
 import com.ppb2.kalfian.covidtracker.modules.auth.LoginActivity
 
-fun Activity.isAuthorize(auth: FirebaseAuth) {
+fun Activity.isAuthorize(auth: FirebaseAuth): String {
     if (auth.currentUser == null) {
         AwesomeDialog.build(this)
         .title("Sesi habis")
@@ -25,6 +25,8 @@ fun Activity.isAuthorize(auth: FirebaseAuth) {
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(intent)
         }
-        return
+        return ""
     }
+
+    return auth.currentUser!!.uid
 }

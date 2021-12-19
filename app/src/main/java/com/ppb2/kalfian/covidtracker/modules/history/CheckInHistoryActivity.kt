@@ -37,9 +37,7 @@ class CheckInHistoryActivity : AppCompatActivity(), CheckInHistoryAdapter.Adapte
         val v = b.root
         setContentView(v)
 
-        isAuthorize(auth)
-
-        this.userUID = auth.currentUser!!.uid
+        this.userUID = isAuthorize(auth)
 
         listenCheckIn()
 

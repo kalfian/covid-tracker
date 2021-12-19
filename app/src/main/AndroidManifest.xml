@@ -6,6 +6,7 @@
     <uses-sdk tools:overrideLibrary="com.google.zxing.client.android" />
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <uses-feature
         android:name="android.hardware.sensor.accelerometer"
@@ -19,12 +20,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CovidTracker">
-        <activity android:name=".modules.setting.SettingActivity"></activity>
-        <activity android:name=".modules.history.CheckInHistoryActivity" />
 
         <service
             android:name=".utils.fallservice.FallService"
             android:enabled="true" />
+
+        <activity android:name=".modules.setting.EmergencyActivity"></activity>
+        <activity android:name=".modules.setting.SettingActivity" />
+        <activity android:name=".modules.history.CheckInHistoryActivity" />
+
 
         <activity android:name=".modules.dashboard.DashboardActivity" />
         <activity android:name=".modules.auth.RegisterActivity" />

@@ -25,7 +25,6 @@ class SplashScreen : AppCompatActivity() {
         b.rotateloading.start()
 
         Handler(Looper.getMainLooper()).postDelayed({
-        // TODO: Create logic to handle auto login
             if(auth.currentUser != null) {
                 val intent = Intent(this, DashboardActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
