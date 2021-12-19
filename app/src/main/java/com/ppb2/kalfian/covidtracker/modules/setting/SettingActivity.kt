@@ -46,22 +46,20 @@ class SettingActivity : AppCompatActivity(), OnSensorChanged {
         }
 
         b.btnEditProfile.setOnClickListener {
-
             FallService.startService(applicationContext, this)
-
-
         }
 
         b.btnLogout.setOnClickListener {
             AwesomeDialog.build(this)
-                .title("Sesi habis")
-                .body("Silahkan login kembali untuk memulai sesi baru")
+                .title("Keluar")
+                .body("Apakah anda yakin ingin keluar?")
                 .onPositive(
                     "Ok",
                     R.drawable.rounded_blue,
                     ContextCompat.getColor(this, android.R.color.white)
                 ) {
                     auth.signOut()
+                    FallService.stopService(applicationContext)
                     val intent = Intent(applicationContext, LoginActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)

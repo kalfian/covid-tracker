@@ -10,9 +10,12 @@ import com.example.awesomedialog.title
 import com.google.firebase.auth.FirebaseAuth
 import com.ppb2.kalfian.covidtracker.R
 import com.ppb2.kalfian.covidtracker.modules.auth.LoginActivity
+import com.ppb2.kalfian.covidtracker.utils.fallservice.FallService
 
 fun Activity.isAuthorize(auth: FirebaseAuth): String {
     if (auth.currentUser == null) {
+        FallService.stopService(applicationContext)
+
         AwesomeDialog.build(this)
         .title("Sesi habis")
         .body("Silahkan login kembali untuk memulai sesi baru")

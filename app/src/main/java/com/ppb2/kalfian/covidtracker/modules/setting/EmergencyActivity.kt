@@ -1,5 +1,6 @@
 package com.ppb2.kalfian.covidtracker.modules.setting
 
+import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -9,6 +10,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.ppb2.kalfian.covidtracker.R
 import com.ppb2.kalfian.covidtracker.databinding.ActivityEmergencyBinding
+import com.ppb2.kalfian.covidtracker.modules.dashboard.DashboardActivity
 import com.ppb2.kalfian.covidtracker.utils.isAuthorize
 
 
@@ -20,6 +22,7 @@ class EmergencyActivity : AppCompatActivity() {
 
     private lateinit var media: MediaPlayer
     private var userUID = ""
+    private lateinit var countDownTimer: CountDownTimer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +42,7 @@ class EmergencyActivity : AppCompatActivity() {
         media.isLooping = true
         media.start()
 
-        val countDownTimer = object : CountDownTimer(10000, 1000) {
+        countDownTimer = object : CountDownTimer(10000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val current = millisUntilFinished / 1000
 
@@ -59,5 +62,20 @@ class EmergencyActivity : AppCompatActivity() {
             b.counterView.text = "Membatalkan sinyal emergency"
         }
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        countDownTimer.cancel()
+        media.stop()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+
+        val intent = Intent(this, DashboardActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
     }
 }
