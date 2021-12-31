@@ -21,15 +21,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CovidTracker">
 
+
         <service
             android:name=".utils.fallservice.FallService"
             android:enabled="true" />
 
-        <activity android:name=".modules.setting.EmergencyActivity"></activity>
+        <activity android:name=".modules.setting.EmergencyActivity" />
         <activity android:name=".modules.setting.SettingActivity" />
         <activity android:name=".modules.history.CheckInHistoryActivity" />
-
-
         <activity android:name=".modules.dashboard.DashboardActivity" />
         <activity android:name=".modules.auth.RegisterActivity" />
         <activity android:name=".modules.auth.LoginActivity" />
@@ -46,6 +45,7 @@
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"
             tools:replace="screenOrientation" />
+        <activity android:name=".modules.setting.NotificationActivity"/>
     </application>
 
 </manifest>

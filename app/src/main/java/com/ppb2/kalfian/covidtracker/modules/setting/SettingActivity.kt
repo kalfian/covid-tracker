@@ -18,7 +18,7 @@ import com.ppb2.kalfian.covidtracker.utils.fallservice.FallService
 import com.ppb2.kalfian.covidtracker.utils.fallservice.OnSensorChanged
 import com.ppb2.kalfian.covidtracker.utils.isAuthorize
 
-class SettingActivity : AppCompatActivity(), OnSensorChanged {
+class SettingActivity : AppCompatActivity() {
 
     private lateinit var b: ActivitySettingBinding
     private lateinit var auth: FirebaseAuth
@@ -46,7 +46,12 @@ class SettingActivity : AppCompatActivity(), OnSensorChanged {
         }
 
         b.btnEditProfile.setOnClickListener {
-            FallService.startService(applicationContext, this)
+
+        }
+
+        b.btnNotif.setOnClickListener{
+            val intent = Intent(applicationContext, NotificationActivity::class.java)
+            startActivity(intent)
         }
 
         b.btnLogout.setOnClickListener {
@@ -67,10 +72,5 @@ class SettingActivity : AppCompatActivity(), OnSensorChanged {
 
                 }
         }
-    }
-
-    override fun onFall(fallObject: FallObject) {
-        val intent = Intent(this, EmergencyActivity::class.java)
-        startActivity(intent)
     }
 }

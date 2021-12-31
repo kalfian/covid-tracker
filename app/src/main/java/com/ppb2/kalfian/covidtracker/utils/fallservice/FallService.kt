@@ -91,7 +91,7 @@ class FallService: Service(), SensorEventListener {
             )
 
             val precision = DecimalFormat("0.00")
-            val ldAccRound = java.lang.Double.parseDouble(precision.format(loAccelerationReader))
+            val ldAccRound = precision.format(loAccelerationReader).replace(",", ".").toDouble()
 
             // precision/fall detection and more than 1000ms after last fall
             if (ldAccRound > 0.3 && ldAccRound < 1.2 && (movementStart - lastMovementFall) > 1000) {
