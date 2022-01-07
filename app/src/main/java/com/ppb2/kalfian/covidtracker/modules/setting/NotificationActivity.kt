@@ -1,5 +1,6 @@
 package com.ppb2.kalfian.covidtracker.modules.setting
 
+import android.Manifest
 import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +15,7 @@ import com.ppb2.kalfian.covidtracker.utils.fallservice.FallObject
 import com.ppb2.kalfian.covidtracker.utils.fallservice.FallService
 import com.ppb2.kalfian.covidtracker.utils.fallservice.OnSensorChanged
 import com.ppb2.kalfian.covidtracker.utils.isAuthorize
+import pub.devrel.easypermissions.EasyPermissions
 
 class NotificationActivity : AppCompatActivity(), OnSensorChanged {
 
@@ -53,17 +55,22 @@ class NotificationActivity : AppCompatActivity(), OnSensorChanged {
         }
 
         b.switchEmergency.setOnClickListener {
-            isActivateAlarm = !isActivateAlarm
-            val editor:SharedPreferences.Editor = sharedPref.edit()
-            editor.putBoolean(Constant.PREF_ALERT_ACTIVATE, isActivateAlarm)
-            editor.apply()
+            if (EasyPermissions.hasPermissions(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                isActivateAlarm = !isActivateAlarm
+                val editor:SharedPreferences.Editor = sharedPref.edit()
+                editor.putBoolean(Constant.PREF_ALERT_ACTIVATE, isActivateAlarm)
+                editor.apply()
 
-            if (isActivateAlarm) {
-                FallService.startService(applicationContext, this)
+                if (isActivateAlarm) {
+                    FallService.startService(applicationContext, this)
+                } else {
+                    FallService.stopService(applicationContext)
+                }
             } else {
-                FallService.stopService(applicationContext)
+                EasyPermissions.requestPermissions(
+                    this, "Need Permission to access location this file", Constant.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION
+                )
             }
-
         }
     }
 

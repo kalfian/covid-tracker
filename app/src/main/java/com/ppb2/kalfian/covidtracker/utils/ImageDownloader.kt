@@ -15,20 +15,14 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import pub.devrel.easypermissions.EasyPermissions
 import java.io.File
 
 
-class ImageDownloader {
+class ImageDownloader(var ctx: Activity,var url: String) {
 
-    private var ctx: Activity
-    private var url: String
     private var msg: String? = ""
     private var lastMsg = ""
-
-    constructor(ctx: Activity, url: String) {
-        this.ctx = ctx
-        this.url = url
-    }
 
     @SuppressLint("Range")
     fun download() {
@@ -55,7 +49,7 @@ class ImageDownloader {
 
         val downloadId = downloadManager.enqueue(request)
         val query = DownloadManager.Query().setFilterById(downloadId)
-        Thread(Runnable {
+        Thread {
             var downloading = true
             while (downloading) {
                 val cursor: Cursor = downloadManager.query(query)
@@ -73,7 +67,7 @@ class ImageDownloader {
                 }
                 cursor.close()
             }
-        }).start()
+        }.start()
     }
 
     private fun statusMessage(url: String, directory: File, status: Int): String? {
@@ -93,39 +87,12 @@ class ImageDownloader {
 
     @TargetApi(Build.VERSION_CODES.M)
     fun askPermissions() {
-        if (ContextCompat.checkSelfPermission(
-                ctx,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(
-                    ctx,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                )
-            ) {
-                AlertDialog.Builder(ctx)
-                    .setTitle("Permission required")
-                    .setMessage("Permission required to save photos from the Web.")
-                    .setPositiveButton("Allow") { dialog, id ->
-                        ActivityCompat.requestPermissions(
-                            ctx,
-                            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                            1
-                        )
-                        ctx.finish()
-                    }
-                    .setNegativeButton("Deny") { dialog, id -> dialog.cancel() }
-                    .show()
-            } else {
-                ActivityCompat.requestPermissions(
-                    ctx,
-                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                    1
-                )
-
-            }
-        } else {
+        if (EasyPermissions.hasPermissions(ctx, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             download()
+        } else {
+            EasyPermissions.requestPermissions(
+                ctx, "Need Permission to download this file", Constant.PERMISSION_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
         }
     }
 }

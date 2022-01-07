@@ -44,10 +44,8 @@ class FallService: Service(), SensorEventListener {
     var mSensor: Sensor? = null
     private var lastMovementFall: Long = 0
     private var movementStart: Long = 0
-    private var ct = 2
 
     private val CHANNEL_ID = "ChannelFallService"
-    private val CHANNEL_ID_NOTIFICATIONS = "ChannelFallServiceNotifications"
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
 
@@ -125,8 +123,8 @@ class FallService: Service(), SensorEventListener {
                 .build()
         } else {
             NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("FallService")
-                .setContentText("Foreground service is running")
+                .setContentTitle("Emergency Started")
+                .setContentText("Emergency service berjalan, alarm akan berbunyi jika device terjatuh")
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .build()
         }

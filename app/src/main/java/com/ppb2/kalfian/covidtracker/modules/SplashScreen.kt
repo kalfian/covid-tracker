@@ -1,5 +1,6 @@
-package com.ppb2.kalfian.covidtracker
+package com.ppb2.kalfian.covidtracker.modules
 
+import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -9,6 +10,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.ppb2.kalfian.covidtracker.databinding.ActivitySplashScreenBinding
 import com.ppb2.kalfian.covidtracker.modules.auth.LoginActivity
 import com.ppb2.kalfian.covidtracker.modules.dashboard.DashboardActivity
+import com.ppb2.kalfian.covidtracker.utils.Constant
+import pub.devrel.easypermissions.EasyPermissions
 
 class SplashScreen : AppCompatActivity() {
     private val SPLASH_TIME: Long = 1000

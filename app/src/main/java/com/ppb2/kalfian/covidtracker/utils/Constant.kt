@@ -10,4 +10,7 @@ object Constant {
 
     const val VACCINE_LINK = "vaccine_link"
     const val VACCINE_TITLE = "vaccine_title"
+
+    const val PERMISSION_EXTERNAL_STORAGE = 123
+    const val ACCESS_FINE_LOCATION = 111
 }
