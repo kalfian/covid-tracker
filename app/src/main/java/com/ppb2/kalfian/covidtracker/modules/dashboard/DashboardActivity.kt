@@ -20,10 +20,7 @@ import com.ppb2.kalfian.covidtracker.databinding.ActivityDashboardBinding
 import com.ppb2.kalfian.covidtracker.models.*
 import com.ppb2.kalfian.covidtracker.modules.history.CheckInHistoryActivity
 import com.ppb2.kalfian.covidtracker.modules.setting.SettingActivity
-import com.ppb2.kalfian.covidtracker.utils.DB
-import com.ppb2.kalfian.covidtracker.utils.Validate
-import com.ppb2.kalfian.covidtracker.utils.fireDialog
-import com.ppb2.kalfian.covidtracker.utils.isAuthorize
+import com.ppb2.kalfian.covidtracker.utils.*
 
 
 class DashboardActivity : AppCompatActivity(), VaccineCertAdapter.AdapterVaccineCertOnClickListener, TestCovidAdapter.AdapterTestCovidOnClickListener, CheckInHistoryAdapter.AdapterCheckInHistoryOnClickListener {
@@ -233,7 +230,7 @@ class DashboardActivity : AppCompatActivity(), VaccineCertAdapter.AdapterVaccine
         ScanContract()
     ) { result: ScanIntentResult ->
         if (result.contents != null) {
-            DB.getPlaceById(db, result.contents.toString()) { it ->
+            DB.getPlaceById(db, result.contents.toString()) {
                 if(it == null) {
                     this.fireDialog("Gagal Masuk", "QR Code tidak terdaftar pada sistem kami, silahkan mencoba QR Code yang lain")
                     return@getPlaceById
@@ -259,7 +256,6 @@ class DashboardActivity : AppCompatActivity(), VaccineCertAdapter.AdapterVaccine
                         return@getPlaceTotal
                     }
 
-                    Log.d("TESTER", "$userCheckIn ${this.userUID} ${Validate.isAlreadyCheckIn(userCheckIn, this.userUID)}")
                     if(Validate.isAlreadyCheckIn(userCheckIn, this.userUID)) {
                         this.fireDialog("Gagal Masuk", "Gagal Masuk di ${place.name} karena masih terdapat sesi")
                         return@getPlaceTotal
@@ -286,7 +282,10 @@ class DashboardActivity : AppCompatActivity(), VaccineCertAdapter.AdapterVaccine
 
 
     override fun onItemClickListener(data: VaccineCert) {
-
+        val intent = Intent(this, VaccineDetailActivity::class.java)
+        intent.putExtra(Constant.VACCINE_LINK, data.image)
+        intent.putExtra(Constant.VACCINE_TITLE, data.title)
+        startActivity(intent)
     }
 
     override fun onItemClickListener(data: TestCovid) {

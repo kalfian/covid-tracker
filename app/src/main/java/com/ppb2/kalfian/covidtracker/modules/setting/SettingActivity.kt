@@ -7,10 +7,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.awesomedialog.*
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.ppb2.kalfian.covidtracker.R
 import com.ppb2.kalfian.covidtracker.databinding.ActivitySettingBinding
+import com.ppb2.kalfian.covidtracker.models.User
 import com.ppb2.kalfian.covidtracker.modules.auth.LoginActivity
 import com.ppb2.kalfian.covidtracker.modules.dashboard.DashboardActivity
 import com.ppb2.kalfian.covidtracker.utils.fallservice.FallObject
@@ -39,6 +39,7 @@ class SettingActivity : AppCompatActivity() {
 
         this.userUID = isAuthorize(auth)
 
+        listenUser()
 
         b.nav.titleNav.text = "Pengaturan"
         b.nav.backButton.setOnClickListener {
@@ -72,5 +73,20 @@ class SettingActivity : AppCompatActivity() {
 
                 }
         }
+    }
+
+    private fun listenUser() {
+        val proc = db.child("Users").child(this.userUID)
+        proc.addValueEventListener(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val user = snapshot.getValue(User::class.java)
+                b.name.text = "${user?.name}"
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
     }
 }

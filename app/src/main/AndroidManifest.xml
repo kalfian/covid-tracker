@@ -7,6 +7,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-feature
         android:name="android.hardware.sensor.accelerometer"
@@ -20,7 +22,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CovidTracker">
-
+        <activity android:name=".modules.dashboard.VaccineDetailActivity" android:screenOrientation="landscape"/>
 
         <service
             android:name=".utils.fallservice.FallService"
@@ -45,7 +47,7 @@
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"
             tools:replace="screenOrientation" />
-        <activity android:name=".modules.setting.NotificationActivity"/>
+        <activity android:name=".modules.setting.NotificationActivity" />
     </application>
 
 </manifest>
