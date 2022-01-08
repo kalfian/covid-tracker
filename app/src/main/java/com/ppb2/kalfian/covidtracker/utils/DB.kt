@@ -6,7 +6,9 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
 import com.ppb2.kalfian.covidtracker.models.CheckInHistory
+import com.ppb2.kalfian.covidtracker.models.EmergencyModel
 import com.ppb2.kalfian.covidtracker.models.Place
+import com.ppb2.kalfian.covidtracker.models.User
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -35,6 +37,32 @@ class DB {
                 callback(place)
             }.addOnFailureListener {
                 callback(null)
+            }
+        }
+
+        fun getUserById(db: DatabaseReference, userId: String, callback: (user: User?) -> Unit) {
+            db.child("Users").child(userId).get().addOnSuccessListener {
+                val user = it.getValue(User::class.java)
+                callback(user)
+            }.addOnFailureListener {
+                callback(null)
+            }
+        }
+
+        fun insertEmergency(db: DatabaseReference, emergency: EmergencyModel, callback: (isError: Boolean, message: String) -> Unit) {
+            val emergencyKey = db.child("Alarm").push().key
+            if (emergencyKey == null) {
+                callback(true, "Couldn't get push key for emergency")
+                return
+            }
+
+            emergency.emergencyId = emergencyKey
+
+            db.child("Alarm").child(emergencyKey).setValue(emergency).addOnFailureListener {
+                callback(true, it.localizedMessage.toString())
+                return@addOnFailureListener
+            }.addOnSuccessListener {
+                callback(false, "Success Insert Emergency")
             }
         }
 

@@ -1,17 +1,24 @@
 package com.ppb2.kalfian.covidtracker.modules.setting
 
 import android.content.Intent
+import android.location.LocationListener
+import android.location.LocationManager
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.ppb2.kalfian.covidtracker.R
 import com.ppb2.kalfian.covidtracker.databinding.ActivityEmergencyBinding
+import com.ppb2.kalfian.covidtracker.models.EmergencyModel
 import com.ppb2.kalfian.covidtracker.modules.dashboard.DashboardActivity
+import com.ppb2.kalfian.covidtracker.utils.DB
 import com.ppb2.kalfian.covidtracker.utils.isAuthorize
+
+private var locationManager : LocationManager? = null
 
 
 class EmergencyActivity : AppCompatActivity() {
@@ -23,6 +30,8 @@ class EmergencyActivity : AppCompatActivity() {
     private lateinit var media: MediaPlayer
     private var userUID = ""
     private lateinit var countDownTimer: CountDownTimer
+
+    private lateinit var locationListener: LocationListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +51,9 @@ class EmergencyActivity : AppCompatActivity() {
         media.isLooping = true
         media.start()
 
-        countDownTimer = object : CountDownTimer(10000, 1000) {
+        locationManager = getSystemService(LOCATION_SERVICE) as LocationManager?
+
+        countDownTimer = object : CountDownTimer(5000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val current = millisUntilFinished / 1000
 
@@ -51,6 +62,35 @@ class EmergencyActivity : AppCompatActivity() {
 
             override fun onFinish() {
                 b.counterView.text = "Mengirim sinyal emergency"
+                DB.getUserById(db, userUID) {
+                    if (it != null) {
+                        val user = it
+                        try {
+
+                            locationListener = LocationListener { location ->
+                                val emergency = EmergencyModel()
+                                emergency.lat = location.latitude
+                                emergency.long = location.longitude
+                                emergency.user_id = user.uid
+                                emergency.user_name = user.name
+
+                                DB.insertEmergency(db, emergency) { error, msg ->
+                                    if (error) {
+                                        b.counterView.text = msg
+                                    }
+
+                                    b.counterView.text = "Sinyal Emergency terkirim"
+                                    locationManager?.removeUpdates(locationListener)
+                                }
+                            }
+
+                            locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, locationListener)
+                            return@getUserById
+                        } catch(ex: SecurityException) {
+                            Log.d("ErrorSendLocation", "Security Exception, no location available")
+                        }
+                    }
+                }
             }
         }
 
@@ -59,7 +99,7 @@ class EmergencyActivity : AppCompatActivity() {
         b.stopEmergency.setOnClickListener {
             media.stop()
             countDownTimer.cancel()
-            b.counterView.text = "Membatalkan sinyal emergency"
+            b.counterView.text = "Mematikan sinyal emergency"
         }
 
     }
