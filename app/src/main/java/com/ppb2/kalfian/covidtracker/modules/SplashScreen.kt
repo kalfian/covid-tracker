@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.auth.FirebaseAuth
 import com.ppb2.kalfian.covidtracker.databinding.ActivitySplashScreenBinding
 import com.ppb2.kalfian.covidtracker.modules.auth.LoginActivity
@@ -24,6 +25,9 @@ class SplashScreen : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         val v = b.root
         setContentView(v)
+
+        // F**kup with night mode :)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         b.rotateloading.start()
 

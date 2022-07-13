@@ -28,6 +28,7 @@ class VaccineCertAdapter(onClick: AdapterVaccineCertOnClickListener): RecyclerVi
 
             Picasso.get()
                 .load(image)
+                .placeholder(R.drawable.logo)
                 .into(b.vaccineImage)
 
             itemView.setOnClickListener {

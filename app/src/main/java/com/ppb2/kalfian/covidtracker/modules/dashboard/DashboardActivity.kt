@@ -1,26 +1,41 @@
 package com.ppb2.kalfian.covidtracker.modules.dashboard
 
+import android.Manifest
+import android.bluetooth.BluetoothAdapter.ACTION_DISCOVERY_FINISHED
+import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothDevice.ACTION_FOUND
+import android.bluetooth.BluetoothManager
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanIntentResult
 import com.journeyapps.barcodescanner.ScanOptions
+import com.ppb2.kalfian.covidtracker.R
 import com.ppb2.kalfian.covidtracker.adapters.CheckInHistoryAdapter
 import com.ppb2.kalfian.covidtracker.adapters.TestCovidAdapter
 import com.ppb2.kalfian.covidtracker.adapters.VaccineCertAdapter
 import com.ppb2.kalfian.covidtracker.databinding.ActivityDashboardBinding
-import com.ppb2.kalfian.covidtracker.models.*
+import com.ppb2.kalfian.covidtracker.models.CheckInHistory
+import com.ppb2.kalfian.covidtracker.models.TestCovid
+import com.ppb2.kalfian.covidtracker.models.User
+import com.ppb2.kalfian.covidtracker.models.VaccineCert
 import com.ppb2.kalfian.covidtracker.modules.history.CheckInHistoryActivity
 import com.ppb2.kalfian.covidtracker.modules.setting.SettingActivity
 import com.ppb2.kalfian.covidtracker.utils.*
+import pub.devrel.easypermissions.EasyPermissions
 
 
 class DashboardActivity : AppCompatActivity(), VaccineCertAdapter.AdapterVaccineCertOnClickListener, TestCovidAdapter.AdapterTestCovidOnClickListener, CheckInHistoryAdapter.AdapterCheckInHistoryOnClickListener {
@@ -28,7 +43,6 @@ class DashboardActivity : AppCompatActivity(), VaccineCertAdapter.AdapterVaccine
     private lateinit var b: ActivityDashboardBinding
     private lateinit var auth: FirebaseAuth
     private lateinit var db: DatabaseReference
-
 
     private lateinit var vaccineAdapter: VaccineCertAdapter
     private lateinit var testCovidAdapter: TestCovidAdapter
@@ -38,6 +52,12 @@ class DashboardActivity : AppCompatActivity(), VaccineCertAdapter.AdapterVaccine
     private var listTestCovid = arrayListOf<TestCovid>()
 
     private var userUID = ""
+    private var nearby = 0
+
+    override fun onResume() {
+        super.onResume()
+        checkNearby()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +85,7 @@ class DashboardActivity : AppCompatActivity(), VaccineCertAdapter.AdapterVaccine
             listenTestCovid()
             listenUser()
             listenCheckIn()
+            checkNearby()
             b.swipeRefreshHome.isRefreshing = false
         }
 
@@ -214,6 +235,107 @@ class DashboardActivity : AppCompatActivity(), VaccineCertAdapter.AdapterVaccine
 
         })
 
+    }
+
+    private val mBroadcastReceiver3: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val action = intent.action
+            Log.d("LOG_NEARBY", "onReceive: " + action)
+            if (action == ACTION_FOUND) {
+                val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
+                nearby += 1
+                Log.d("LOG_NEARBY","${device}")
+                setSubstitleBluetooth(nearby)
+
+            }
+        }
+    }
+
+    private fun setSubstitleBluetooth(total: Int) {
+        b.nearbyScanSubtitle.text = "Ada sekitar ${total} orang di sekitarmu"
+    }
+
+    private fun checkNearby() {
+        this.nearby = 0;
+        val sharedPref = this.getSharedPreferences(Constant.PREF_CONF_NAME, Constant.PREF_CONF_MODE)
+        val isActivateNearby = sharedPref.getBoolean(Constant.NEARBY_IS_ACTIVE, false)
+        if(isActivateNearby) {
+            b.nearbyScan.visibility = View.VISIBLE
+
+            val bluetoothManager = this.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+            val bluetoothAdapter = bluetoothManager.adapter
+            if (bluetoothAdapter.isEnabled) {
+
+                checkBtPermission()
+
+                var filter = IntentFilter()
+                filter.addAction(ACTION_FOUND)
+                this.registerReceiver(mBroadcastReceiver3, filter)
+
+                if (bluetoothAdapter.isDiscovering) {
+                    bluetoothAdapter.cancelDiscovery()
+                }
+
+                Log.d("LOG_NEARBY", bluetoothAdapter.startDiscovery().toString())
+
+                b.nearbyScan.setBackgroundColor(ContextCompat.getColor(this, R.color.green))
+                b.nearbyScanTitle.text = "Info terbaru nih"
+                setSubstitleBluetooth(this.nearby)
+                return
+            }
+
+
+            b.nearbyScan.setBackgroundColor(ContextCompat.getColor(this, R.color.red))
+            b.nearbyScanTitle.text = "Maaf Fitur Nearby Terhenti"
+            b.nearbyScanSubtitle.text = "Aktifkan bluetooth untuk menggunakan layanan ini"
+            b.nearbyScan.setOnClickListener {
+                startActivity(Intent(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS));
+            }
+
+            return
+        }
+
+        b.nearbyScan.visibility = View.GONE
+
+
+
+    }
+
+    private fun checkBtPermission()
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S){
+            if (!EasyPermissions.hasPermissions(
+                    this,
+                    Manifest.permission.BLUETOOTH,
+                    Manifest.permission.BLUETOOTH_SCAN,
+                    Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                )
+            ) {
+                EasyPermissions.requestPermissions(
+                    this, "Need Permission to access bluetooth", Constant.NEARBY_PEOPLE_PERMISSION,
+                    Manifest.permission.BLUETOOTH,
+                    Manifest.permission.BLUETOOTH_SCAN,
+                    Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                )
+                return
+            }
+        } else {
+            if (!EasyPermissions.hasPermissions(
+                    this,
+                    Manifest.permission.BLUETOOTH,
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                )
+            ) {
+                EasyPermissions.requestPermissions(
+                    this, "Need Permission to access bluetooth", Constant.NEARBY_PEOPLE_PERMISSION,
+                    Manifest.permission.BLUETOOTH,
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                )
+                return
+            }
+        }
     }
 
     private fun listenScanButton() {
