@@ -20,6 +20,11 @@
     <uses-feature android:name="android.hardware.bluetooth" android:required="true"/>
 
     <uses-feature
+        android:name="android.hardware.location"
+        android:required="true"
+        />
+
+    <uses-feature
         android:name="android.hardware.sensor.accelerometer"
         android:required="true" />
 

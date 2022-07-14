@@ -1,14 +1,11 @@
 package com.ppb2.kalfian.covidtracker.modules.setting
 
 import android.Manifest
-import android.bluetooth.BluetoothAdapter
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -18,8 +15,6 @@ import com.ppb2.kalfian.covidtracker.utils.fallservice.FallObject
 import com.ppb2.kalfian.covidtracker.utils.fallservice.FallService
 import com.ppb2.kalfian.covidtracker.utils.fallservice.OnSensorChanged
 import com.ppb2.kalfian.covidtracker.utils.isAuthorize
-import com.ppb2.kalfian.covidtracker.utils.nearbyService.NearbyService
-import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 
 class NotificationActivity : AppCompatActivity(), OnSensorChanged {
