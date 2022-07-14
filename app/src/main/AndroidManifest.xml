@@ -16,6 +16,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
     <uses-feature android:name="android.hardware.bluetooth" android:required="true"/>
 
@@ -40,6 +41,10 @@
 
         <service
             android:name=".utils.fallservice.FallService"
+            android:enabled="true" />
+
+        <service
+            android:name=".utils.trackService.TrackService"
             android:enabled="true" />
 
         <activity android:name=".modules.setting.EmergencyActivity" />

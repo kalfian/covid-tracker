@@ -35,6 +35,7 @@ import com.ppb2.kalfian.covidtracker.models.VaccineCert
 import com.ppb2.kalfian.covidtracker.modules.history.CheckInHistoryActivity
 import com.ppb2.kalfian.covidtracker.modules.setting.SettingActivity
 import com.ppb2.kalfian.covidtracker.utils.*
+import com.ppb2.kalfian.covidtracker.utils.trackService.TrackService
 import pub.devrel.easypermissions.EasyPermissions
 
 
@@ -194,9 +195,27 @@ class DashboardActivity : AppCompatActivity(), VaccineCertAdapter.AdapterVaccine
                 if(listTestCovid.size > 0 ){
                     testCovidAdapter.clear()
                     testCovidAdapter.addList(listTestCovid)
+
+                    var isCovid = false
+                    listTestCovid.forEach {
+                        if (it.positive) {
+                            isCovid = true
+                        }
+                    }
+
+                    if (isCovid) {
+                        Log.d("DEBUGG", "Service Started")
+                        TrackService.startService(this@DashboardActivity)
+                    } else {
+                        Log.d("DEBUGG", "Service Stopped")
+                        TrackService.stopService(this@DashboardActivity)
+                    }
+
                     b.listTestCovid.visibility = View.VISIBLE
                     b.emptyTestCovid.visibility = View.GONE
                 } else {
+                    Log.d("DEBUGG", "Service Stopped")
+                    TrackService.stopService(this@DashboardActivity)
                     b.listTestCovid.visibility = View.GONE
                     b.emptyTestCovid.visibility = View.VISIBLE
                 }

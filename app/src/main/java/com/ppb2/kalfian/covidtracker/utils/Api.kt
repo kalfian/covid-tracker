@@ -8,6 +8,6 @@ import retrofit2.http.QueryMap
 interface Api {
     @POST("user-journey/post-user-journey")
     fun postUserJourney(
-        @QueryMap parameters: HashMap<String, String>
+        @QueryMap parameters: HashMap<String, Any>
     ): Call<PostLocationResponse>
 }
